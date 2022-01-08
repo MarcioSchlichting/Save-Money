@@ -31,11 +31,6 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
         event.preventDefault();
     }
 
-    function handleChange(event : FormEvent) {
-        const { name, value } = event.target;
-        setTransaction(previousState => ({ ...previousState, [name]: value }));
-    }
-
     return (
         <Modal
             isOpen={ isOpen }
@@ -51,7 +46,13 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                     <img src={ closeImage } alt="Fechar modal"/>
                 </button>
                 <h2>Registrar transação</h2>
-                <input placeholder="Título" value={ transaction.Title } onChange={ event => handleChange(event) }/>
+                <input 
+                    placeholder="Título" value={ transaction.Title } 
+                    onChange={ event => {
+                        console.log(event.target);
+                        setTransaction({ ...transaction, Title: event.target.value });
+                    } }
+                />
                 <input type="number" placeholder="Valor"/>
 
                 <TransactionTypeContainer>
