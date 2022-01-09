@@ -60,7 +60,7 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                 <TransactionTypeContainer>
                     <RadioBox 
                         type="button" 
-                        onClick={ event => {
+                        onClick={ () => {
                             const type = 'deposit';
                             setType(type) 
                             setTransaction({...transaction, IsActive: type })
@@ -73,7 +73,7 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                     </RadioBox>
                     <RadioBox 
                         type="button" 
-                        onClick={ event => {
+                        onClick={ () => {
                             const type = 'withdraw';
                             setType(type) 
                             setTransaction({...transaction, IsActive: type })
@@ -94,7 +94,6 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
 
                 <button type="submit">Cadastrar</button>
             </Container>
-
         </Modal>
     )
 }
