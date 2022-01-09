@@ -1,5 +1,7 @@
 ﻿# Save-Money
 
+This application helps organize your expenses and profits.
+
 ## Tecnologies
 
 This project was developed using cutting edge front-end technologies.
