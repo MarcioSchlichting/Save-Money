@@ -12,7 +12,7 @@ interface NewTransactionModalProps {
 
 interface Transaction {
     Title: string;
-    Price: string;
+    Value: string;
     IsActive: string;
     Category: string;
 }
@@ -21,7 +21,7 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
     const [transaction, setTransaction] = useState<Transaction>({ 
         Title: 'John Wick', 
         IsActive: 'deposit',
-        Price: 'asdsa',
+        Value: 'asdsa',
         Category: 'deposit'
     });
     
@@ -48,17 +48,23 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                 <h2>Registrar transação</h2>
                 <input 
                     placeholder="Título" value={ transaction.Title } 
-                    onChange={ event => {
-                        console.log(event.target);
-                        setTransaction({ ...transaction, Title: event.target.value });
-                    } }
+                    onChange={ event => setTransaction({ ...transaction, Title: event.target.value }) }
                 />
-                <input type="number" placeholder="Valor"/>
+                <input 
+                    type="number" 
+                    placeholder="Valor"
+                    value={ transaction.Value }
+                    onChange={ event => setTransaction({ ...transaction, Value: event.target.value }) }
+                />
 
                 <TransactionTypeContainer>
                     <RadioBox 
                         type="button" 
-                        onClick={ () => setType('deposit') }
+                        onClick={ event => {
+                            const type = 'deposit';
+                            setType(type) 
+                            setTransaction({...transaction, IsActive: type })
+                        } }
                         isActive={ type === 'deposit' }
                         activeColor="green"
                     >
@@ -67,7 +73,11 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                     </RadioBox>
                     <RadioBox 
                         type="button" 
-                        onClick={ () => setType('withdraw') }
+                        onClick={ event => {
+                            const type = 'withdraw';
+                            setType(type) 
+                            setTransaction({...transaction, IsActive: type })
+                        } }
                         isActive={ type === 'withdraw' }
                         activeColor="red"
                     >
@@ -76,7 +86,12 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                     </RadioBox>
                 </TransactionTypeContainer>
 
-                <input placeholder="Categoria"/>
+                <input 
+                    placeholder="Categoria"
+                    value={ transaction.Category }
+                    onChange={ event => setTransaction({...transaction, Category: event.target.value }) }
+                />
+
                 <button type="submit">Cadastrar</button>
             </Container>
 
