@@ -6,7 +6,7 @@ import incomeImage from '../../assets/income.svg';
 import outcomeImage from '../../assets/outcome.svg';
 
 import { api } from '../../services/api';
-import { TransactionsContext, TransactionInput } from '../../TransactionsContext';
+import { TransactionInput, useTransactions } from '../../hooks/useTransactions';
 
 
 interface NewTransactionModalProps {
@@ -15,7 +15,7 @@ interface NewTransactionModalProps {
 }
 
 export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionModalProps){
-    const { createTransaction } = useContext(TransactionsContext);
+    const { createTransaction } = useTransactions();
     const defaultTransaction = {
         title: 'John Wick', 
         type: 'deposit',
