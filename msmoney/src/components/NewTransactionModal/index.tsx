@@ -1,11 +1,12 @@
 import Modal from 'react-modal'
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useContext } from 'react';
 import { Container, TransactionTypeContainer, RadioBox } from './styles'
 import closeImage from '../../assets/close.svg';
 import incomeImage from '../../assets/income.svg';
 import outcomeImage from '../../assets/outcome.svg';
 
 import { api } from '../../services/api';
+import { TransactionsContext, TransactionInput } from '../../TransactionsContext';
 
 
 interface NewTransactionModalProps {
@@ -13,27 +14,26 @@ interface NewTransactionModalProps {
     onRequestClose: () => void;
 }
 
-interface Transaction {
-    Title: string;
-    Value: Number;
-    IsActive: string;
-    Category: string;
-}
-
 export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionModalProps){
-    const [transaction, setTransaction] = useState<Transaction>({ 
-        Title: 'John Wick', 
-        IsActive: 'deposit',
-        Value: 0,
-        Category: 'deposit'
-    });
+    const { createTransaction } = useContext(TransactionsContext);
+    const defaultTransaction = {
+        title: 'John Wick', 
+        type: 'deposit',
+        value: 0,
+        category: ''
+    };
+
+    const [transaction, setTransaction] = useState<TransactionInput>({ ...defaultTransaction });
     
     const [type, setType] = useState('deposit')
 
-    function handleCreateNewTransaction(event : FormEvent) {
+    async function handleCreateNewTransaction(event : FormEvent) {
         event.preventDefault();
 
-        api.post('/transactions', transaction);
+        await createTransaction(transaction);
+
+        setTransaction({...defaultTransaction})
+        onRequestClose();
     }
 
     function handleTransactionChanges(event : React.ChangeEvent<HTMLInputElement>) {
@@ -57,28 +57,28 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                 </button>
                 <h2>Registrar transação</h2>
                 <input 
-                    name="Title"
+                    name="title"
                     placeholder="Título" 
                     type="text"
-                    value={ transaction.Title } 
+                    value={ transaction.title } 
                     onChange={ event => handleTransactionChanges(event) }
                 />
                 <input 
-                    name="Value"
+                    name="value"
                     type="number" 
                     placeholder="Valor"
-                    value={ Number(transaction.Value) }
+                    value={ Number(transaction.value) }
                     onChange={ event => handleTransactionChanges(event) }
                 />
 
                 <TransactionTypeContainer>
                     <RadioBox 
-                        name="IsActive"
+                        name="type"
                         type="button" 
                         onClick={ () => {
                             const type = 'deposit';
                             setType(type) 
-                            setTransaction({...transaction, IsActive: type })
+                            setTransaction({...transaction, type: type })
                         } }
                         isActive={ type === 'deposit' }
                         activeColor="green"
@@ -91,7 +91,7 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                         onClick={ () => {
                             const type = 'withdraw';
                             setType(type) 
-                            setTransaction({...transaction, IsActive: type })
+                            setTransaction({...transaction, type: type })
                         } }
                         isActive={ type === 'withdraw' }
                         activeColor="red"
@@ -102,9 +102,9 @@ export function NewTransactionModal( { isOpen, onRequestClose} : NewTransactionM
                 </TransactionTypeContainer>
 
                 <input 
-                    name="Category"
+                    name="category"
                     placeholder="Categoria"
-                    value={ transaction.Category }
+                    value={ transaction.category }
                     onChange={ event => handleTransactionChanges(event) }
                 />
 
